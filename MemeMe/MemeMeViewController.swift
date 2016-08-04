@@ -86,6 +86,7 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
             if completed {
                 // save to the meme
                 self.save()
+                self.dismissViewControllerAnimated(true, completion: nil)
             }
         }
         self.presentViewController(controller, animated: true, completion: nil)
@@ -103,6 +104,7 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imageView.image = image
             self.dismissViewControllerAnimated(true, completion: nil)
+            print("dismiss")
             actionButton.enabled = true
         }
     }
