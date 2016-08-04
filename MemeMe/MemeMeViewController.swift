@@ -26,7 +26,7 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
     
     var meme: Meme!
     
-    let memeTextAttributes = [ NSStrokeColorAttributeName : UIColor.darkGrayColor(),
+    let memeTextAttributes = [ NSStrokeColorAttributeName : UIColor.blackColor(),
                                NSForegroundColorAttributeName : UIColor.whiteColor(),
                                NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
                                NSStrokeWidthAttributeName : -5.0
@@ -35,11 +35,8 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        topTextField.defaultTextAttributes = memeTextAttributes
-        bottomTextField.defaultTextAttributes = memeTextAttributes
-        
-        topTextField.textAlignment = .Center
-        bottomTextField.textAlignment = .Center
+        configureTextFields(topTextField)
+        configureTextFields(bottomTextField)
         
         originalViewY = self.view.frame.origin.y
         
@@ -49,6 +46,10 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
         if imageView.image == nil {
             actionButton.enabled = false
         }
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -65,18 +66,16 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
         self.unsubscribeFromKeyboardNotifications()
     }
     
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
     @IBAction func selectAlbum(sender: UIBarButtonItem) {
-        let pickerController = UIImagePickerController()
-        pickerController.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        pickerController.delegate = self
-        self.presentViewController(pickerController, animated: true, completion:nil)
+        selectImageFromSource(UIImagePickerControllerSourceType.PhotoLibrary)
     }
 
     @IBAction func selectCamera(sender: UIBarButtonItem) {
-        let pickerController = UIImagePickerController()
-        pickerController.sourceType = UIImagePickerControllerSourceType.Camera
-        pickerController.delegate = self
-        self.presentViewController(pickerController, animated: true, completion:nil)
+        selectImageFromSource(UIImagePickerControllerSourceType.Camera)
     }
     
     @IBAction func share(sender: UIBarButtonItem) {
@@ -93,18 +92,24 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
     }
  
     @IBAction func cancel(sender: UIBarButtonItem) {
-        topTextField.text = ""
-        bottomTextField.text = ""
+        topTextField.text = "TOP"
+        bottomTextField.text = "BOTTOM"
         imageView.image = nil
         
         actionButton.enabled = false
+    }
+    
+    func selectImageFromSource(sourceType: UIImagePickerControllerSourceType) {
+        let pickerController = UIImagePickerController()
+        pickerController.sourceType = sourceType
+        pickerController.delegate = self
+        self.presentViewController(pickerController, animated: true, completion:nil)
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imageView.image = image
             self.dismissViewControllerAnimated(true, completion: nil)
-            print("dismiss")
             actionButton.enabled = true
         }
     }
@@ -126,7 +131,7 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
             var userInfo = notification.userInfo!
             let animationDurarion = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSTimeInterval
             UIView.animateWithDuration(animationDurarion, animations: { () -> Void in
-                self.view.frame.origin.y -= self.getKeyboardHeight(notification)
+                self.view.frame.origin.y = self.getKeyboardHeight(notification) * (-1)
             } )
         }
     }
@@ -166,9 +171,11 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
         return true
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        self.view.endEditing(true)
+    func configureTextFields(textField: UITextField) {
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.textAlignment = .Center
     }
+    
     
     func save() {
         meme = Meme( topText: topTextField.text!,

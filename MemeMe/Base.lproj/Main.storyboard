@@ -18,8 +18,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="guA-k6-w5I">
-                                <rect key="frame" x="-8" y="64" width="391" height="559"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="guA-k6-w5I">
+                                <rect key="frame" x="-8" y="0.0" width="391" height="667"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4EU-ti-tBd">
@@ -44,7 +44,7 @@
                                 </items>
                             </toolbar>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HrK-zX-DKK">
-                                <rect key="frame" x="-8" y="20" width="391" height="44"/>
+                                <rect key="frame" x="-8" y="0.0" width="391" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="Be3-5M-QSp"/>
                                 </constraints>
@@ -62,17 +62,17 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="TOP" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="6lx-6b-AAJ">
-                                <rect key="frame" x="12" y="82" width="351" height="40"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TOP" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6lx-6b-AAJ">
+                                <rect key="frame" x="12" y="62" width="351" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="1B0-zb-FbY"/>
                                     <constraint firstAttribute="height" constant="40" id="Iak-Pe-msm"/>
                                 </constraints>
-                                <color key="textColor" red="0.2156862745" green="0.50196078430000002" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="BOTTOM" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="ruL-T0-XEt">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ruL-T0-XEt">
                                 <rect key="frame" x="12" y="563" width="351" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="HA3-hB-utx"/>
@@ -80,7 +80,7 @@
                                 </constraints>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no"/>
                             </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -90,10 +90,11 @@
                             <constraint firstItem="6lx-6b-AAJ" firstAttribute="top" secondItem="HrK-zX-DKK" secondAttribute="bottom" constant="18" id="G8B-AO-HcP"/>
                             <constraint firstItem="guA-k6-w5I" firstAttribute="top" secondItem="HrK-zX-DKK" secondAttribute="bottom" id="IRg-lQ-HDM"/>
                             <constraint firstItem="HrK-zX-DKK" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-24" id="TaU-rv-zEv"/>
+                            <constraint firstItem="guA-k6-w5I" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="UqO-Xo-cLZ"/>
                             <constraint firstItem="ruL-T0-XEt" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-4" id="VMt-gw-Dzb"/>
                             <constraint firstAttribute="trailingMargin" secondItem="guA-k6-w5I" secondAttribute="trailing" constant="-24" id="Z7V-8F-9mv"/>
                             <constraint firstItem="6lx-6b-AAJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-4" id="bTn-6c-qSB"/>
-                            <constraint firstItem="HrK-zX-DKK" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="20" id="cas-Np-ER1"/>
+                            <constraint firstItem="HrK-zX-DKK" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="cas-Np-ER1"/>
                             <constraint firstAttribute="trailingMargin" secondItem="4EU-ti-tBd" secondAttribute="trailing" constant="-28" id="dEM-3a-zjW"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ruL-T0-XEt" secondAttribute="trailing" constant="-4" id="dwS-K8-8FK"/>
                             <constraint firstItem="4EU-ti-tBd" firstAttribute="top" secondItem="guA-k6-w5I" secondAttribute="bottom" id="hNU-sC-5zA"/>
@@ -101,7 +102,14 @@
                             <constraint firstAttribute="trailingMargin" secondItem="6lx-6b-AAJ" secondAttribute="trailing" constant="-4" id="p1p-lJ-rjL"/>
                             <constraint firstItem="4EU-ti-tBd" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-28" id="peB-ev-zPL"/>
                             <constraint firstAttribute="trailingMargin" secondItem="HrK-zX-DKK" secondAttribute="trailing" constant="-24" id="q0q-Yt-8Dc"/>
+                            <constraint firstItem="guA-k6-w5I" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottomMargin" id="xTM-nj-Mf2"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="IRg-lQ-HDM"/>
+                                <exclude reference="hNU-sC-5zA"/>
+                            </mask>
+                        </variation>
                     </view>
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
