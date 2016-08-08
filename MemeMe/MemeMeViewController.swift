@@ -24,7 +24,11 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
     @IBOutlet weak var bottomToolBar: UIToolbar!
     var originalViewY: CGFloat = 0.0
     
-    var meme: Meme!
+    var topText:String!
+    var bottomText:String!
+    var image: UIImage!
+    
+    var memeList: [Meme]!
     
     let memeTextAttributes = [ NSStrokeColorAttributeName : UIColor.blackColor(),
                                NSForegroundColorAttributeName : UIColor.whiteColor(),
@@ -43,6 +47,16 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
         topTextField.delegate = self
         bottomTextField.delegate = self
         
+        if let topText = topText {
+            topTextField.text = topText
+        }
+        if let bottomText = bottomText {
+            bottomTextField.text = bottomText
+        }
+        if let image = image {
+            imageView.image = image
+        }
+        
         if imageView.image == nil {
             actionButton.enabled = false
         }
@@ -57,17 +71,18 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
         
         cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         
-        self.subscribeToKeyboardNotifications()
+        subscribeToKeyboardNotifications()
+        
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.unsubscribeFromKeyboardNotifications()
+        unsubscribeFromKeyboardNotifications()
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        self.view.endEditing(true)
+        view.endEditing(true)
     }
     
     @IBAction func selectAlbum(sender: UIBarButtonItem) {
@@ -85,10 +100,12 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
             if completed {
                 // save to the meme
                 self.save()
-                self.dismissViewControllerAnimated(true, completion: nil)
+                
+                // switch to the tab view
+                self.switchToSavedMeme()
             }
         }
-        self.presentViewController(controller, animated: true, completion: nil)
+        presentViewController(controller, animated: true, completion: nil)
     }
  
     @IBAction func cancel(sender: UIBarButtonItem) {
@@ -97,19 +114,21 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
         imageView.image = nil
         
         actionButton.enabled = false
+        
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
     func selectImageFromSource(sourceType: UIImagePickerControllerSourceType) {
         let pickerController = UIImagePickerController()
         pickerController.sourceType = sourceType
         pickerController.delegate = self
-        self.presentViewController(pickerController, animated: true, completion:nil)
+        presentViewController(pickerController, animated: true, completion:nil)
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imageView.image = image
-            self.dismissViewControllerAnimated(true, completion: nil)
+            dismissViewControllerAnimated(true, completion: nil)
             actionButton.enabled = true
         }
     }
@@ -128,19 +147,19 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
     
     func keyboardWillShow(notification: NSNotification) {
         if isEditingTextFieldWouldBeCoveredByKeyboard(notification) {
-            var userInfo = notification.userInfo!
-            let animationDurarion = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSTimeInterval
-            UIView.animateWithDuration(animationDurarion, animations: { () -> Void in
-                self.view.frame.origin.y = self.getKeyboardHeight(notification) * (-1)
-            } )
+            adjustViewToFitKeyboard(notification, offset: getKeyboardHeight(notification) * (-1))
         }
     }
  
     func keyboardWillHide(notification:NSNotification) {
+        adjustViewToFitKeyboard(notification, offset: originalViewY)
+    }
+    
+    func adjustViewToFitKeyboard(notification:NSNotification, offset: CGFloat) {
         var userInfo = notification.userInfo!
         let animationDurarion = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSTimeInterval
         UIView.animateWithDuration(animationDurarion, animations: { () -> Void in
-            self.view.frame.origin.y = self.originalViewY
+            self.view.frame.origin.y = offset
         } )
     }
     
@@ -178,17 +197,28 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
     
     
     func save() {
-        meme = Meme( topText: topTextField.text!,
+        // create a Meme
+        let meme = Meme( topText: topTextField.text!,
                      bottomText: bottomTextField.text!,
                      originalImage: imageView.image,
                      memedImage: generateMemedImage()
                    )
+        // append it to the list
+        getMemeModel().append(meme)
+        
+        print("Add a new Meme to list, list count is \(getMemeModel().count())")
+    }
+    
+    func switchToSavedMeme() {
+        performSegueWithIdentifier("showTabView", sender: self)
     }
     
     func generateMemedImage() -> UIImage {
         
-        topToolbar.hidden = true
-        bottomToolBar.hidden = true
+        // quit editing before generate meme image
+        view.endEditing(true)
+        
+        hiddenToolbars(true)
         
         // Render view to an image
         UIGraphicsBeginImageContext(self.view.frame.size)
@@ -198,11 +228,19 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
             UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        
-        topToolbar.hidden = false
-        bottomToolBar.hidden = false
+        hiddenToolbars(false)
         
         return memedImage
+    }
+    
+    func hiddenToolbars(hidden: Bool) {
+        topToolbar.hidden = hidden
+        bottomToolBar.hidden = hidden
+    }
+    
+    func getMemeModel() -> MemeModel{
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        return appDelegate.memeModel
     }
 }
 
