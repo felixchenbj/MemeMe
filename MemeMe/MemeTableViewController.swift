@@ -10,6 +10,13 @@ import UIKit
 
 class MemeTableViewController: UITableViewController  {
     
+    var memeModel: MemeModel {
+        get {
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            return appDelegate.memeModel
+        }
+    }
+    
     @IBAction func edit(sender: UIBarButtonItem) {
         tableView.setEditing(!tableView.editing, animated: true)
     }
@@ -24,7 +31,7 @@ class MemeTableViewController: UITableViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("Table view load meme list, list count is \(getMemeModel().count())")
+        print("Table view load meme list, list count is \(memeModel.count())")
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -36,14 +43,14 @@ class MemeTableViewController: UITableViewController  {
     
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return getMemeModel().count()
+        return memeModel.count()
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) ->UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("memeTableCell", forIndexPath: indexPath) as! MemeTableViewCell
         
-        if let meme = getMemeModel().getItemAt(indexPath.row) {
+        if let meme = memeModel.getItemAt(indexPath.row) {
             cell.thumbnailView?.image = meme.memedImage
             cell.topLabel?.text = meme.topText
             cell.bottomLabel?.text = meme.bottomText
@@ -57,7 +64,7 @@ class MemeTableViewController: UITableViewController  {
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
         let resultVC = storyboard.instantiateViewControllerWithIdentifier("MemeDetailViewController") as! MemeDetailViewController
         
-        resultVC.meme = getMemeModel().getItemAt(indexPath.row)
+        resultVC.meme = memeModel.getItemAt(indexPath.row)
         
         tabBarController?.tabBar.hidden = true
         navigationController?.pushViewController(resultVC, animated: true)
@@ -68,16 +75,11 @@ class MemeTableViewController: UITableViewController  {
         case .Delete:
             print("Delete a table view cell")
             // delete meme in the model
-            getMemeModel().remove(indexPath.row)
+            memeModel.remove(indexPath.row)
             // delete meme in the table view
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
         default:
             print("Do nothing")
         }
-    }
-    
-    func getMemeModel() -> MemeModel{
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        return appDelegate.memeModel
     }
 }

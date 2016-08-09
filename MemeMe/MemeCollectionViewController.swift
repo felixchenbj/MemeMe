@@ -10,6 +10,15 @@ import UIKit
 
 class MemeCollectionViewController: UICollectionViewController {
 
+    @IBOutlet weak var collectionViewFlowLayout: UICollectionViewFlowLayout!
+    
+    var memeModel: MemeModel {
+        get {
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            return appDelegate.memeModel
+        }
+    }
+    
     @IBAction func add(sender: UIBarButtonItem) {
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
         let resultVC = storyboard.instantiateViewControllerWithIdentifier("MemeMeViewController")as! MemeMeViewController
@@ -19,6 +28,13 @@ class MemeCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let space: CGFloat = 3.0
+        
+        collectionViewFlowLayout.minimumInteritemSpacing = space
+        collectionViewFlowLayout.minimumLineSpacing = space
+        collectionViewFlowLayout.itemSize = CGSizeMake(100, 145)
+        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -28,14 +44,14 @@ class MemeCollectionViewController: UICollectionViewController {
     }
     
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return getMemeModel().count()
+        return memeModel.count()
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("memeCollectionCell", forIndexPath: indexPath) as! MemeCollectionViewCell
         
-        if let meme = getMemeModel().getItemAt(indexPath.row) {
+        if let meme = memeModel.getItemAt(indexPath.row) {
             cell.topLabel?.text = meme.topText
             cell.bottomLabel?.text = meme.bottomText
             cell.imageView?.image = meme.memedImage
@@ -48,14 +64,10 @@ class MemeCollectionViewController: UICollectionViewController {
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
         let resultVC = storyboard.instantiateViewControllerWithIdentifier("MemeDetailViewController")as! MemeDetailViewController
         
-        resultVC.meme = getMemeModel().getItemAt(indexPath.row)
+        resultVC.meme = memeModel.getItemAt(indexPath.row)
         
         tabBarController?.tabBar.hidden = true
         navigationController?.pushViewController(resultVC, animated: true)
     }
     
-    func getMemeModel() -> MemeModel{
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        return appDelegate.memeModel
-    }
 }

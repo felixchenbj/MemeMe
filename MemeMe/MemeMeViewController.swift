@@ -28,7 +28,12 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
     var bottomText:String!
     var image: UIImage!
     
-    var memeList: [Meme]!
+    var memeModel: MemeModel {
+        get {
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            return appDelegate.memeModel
+        }
+    }
     
     let memeTextAttributes = [ NSStrokeColorAttributeName : UIColor.blackColor(),
                                NSForegroundColorAttributeName : UIColor.whiteColor(),
@@ -204,9 +209,9 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
                      memedImage: generateMemedImage()
                    )
         // append it to the list
-        getMemeModel().append(meme)
+        memeModel.append(meme)
         
-        print("Add a new Meme to list, list count is \(getMemeModel().count())")
+        print("Add a new Meme to list, list count is \(memeModel.count())")
     }
     
     func switchToSavedMeme() {
